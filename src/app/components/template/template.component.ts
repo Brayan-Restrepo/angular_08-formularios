@@ -9,7 +9,7 @@ import { NgForm } from '../../../../node_modules/@angular/forms';
 export class TemplateComponent implements OnInit {
 
   public usuario: Object = {
-    nombre: 'Brayan',
+    nombre: null,
     apellido: 'Restrepo',
     correo: ''
   };

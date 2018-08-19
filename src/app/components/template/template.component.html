@@ -2,17 +2,35 @@
 <hr>
 <form (submit)="guardar(forma)" #forma="ngForm" novalidate="">
     <div>
-        <div class="form-group row">
+        <div class="form-group row has-danger" [ngClass]="{'has-danger': nombre.touched && (nombre.errors?.maxlength || nombre.errors?.minlength || nombre.errors?.required)}">
             <label class="col-2 col-form-label">Nombre</label>
             <div class="col-8">
-                <input class="form-control" type="text" minlength="5" maxlength="7" placeholder="Nombre" name="nomre" [(ngModel)]="usuario.nombre" required>
+                <input class="form-control" type="text" minlength="5" maxlength="7" placeholder="Nombre" name="nomre" [(ngModel)]="usuario['nombre']" #nombre="ngModel" required>
+                <div *ngIf="nombre.errors?.maxlength" class="form-control-feedback">
+                    <span>Maximo son 7 caraceres</span>
+                </div>
+                <div *ngIf="nombre.errors?.minlength" class="form-control-feedback">
+                    <span>Minimo {{ nombre.errors['minlength']['requiredLength'] }} y tiene  {{ nombre.errors['minlength']['actualLength'] }} caraceres</span>
+                </div>
+                <div *ngIf="nombre.errors?.required" class="form-control-feedback">
+                    <span>Este campo es requerido</span>
+                </div>
             </div>
         </div>
 
         <div class="form-group row">
             <label class="col-2 col-form-label">Apellido</label>
             <div class="col-8">
-                <input class="form-control" type="text" placeholder="Apellido" name="apellido" [(ngModel)]="usuario.apellido">
+                <input class="form-control" type="text" placeholder="Apellido" name="apellido" minlength="5" maxlength="7" required #apellido="ngModel" [(ngModel)]="usuario['apellido']">
+                <div *ngIf="apellido.errors?.maxlength">
+                    <span>Maximo son 7 caraceres</span>
+                </div>
+                <div *ngIf="apellido.errors?.minlength">
+                    <span>Minimo {{ nombre.errors['minlength']['requiredLength'] }} y tiene  {{ nombre.errors['minlength']['actualLength'] }} caraceres</span>
+                </div>
+                <div *ngIf="apellido.errors?.required">
+                    <span>Este campo es requerido</span>
+                </div>
             </div>
         </div>
     </div>
@@ -20,7 +38,13 @@
     <div class="form-group row">
         <label class="col-2 col-form-label">Correo</label>
         <div class="col-md-8">
-            <input class="form-control" type="email" placeholder="Correo electrónico" name="correo" [(ngModel)]="usuario.correo">
+            <input class="form-control" type="email" placeholder="Correo electrónico" name="correo" #correo="ngModel" [(ngModel)]="usuario['correo']" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" required>
+            <div *ngIf="correo.errors?.required">
+                Este Campo es requerido
+            </div>
+            <div *ngIf="correo.errors?.pattern">
+                El correo no es valido
+            </div>
         </div>
     </div>
 
@@ -29,9 +53,7 @@
     <div class="form-group row">
         <label class="col-2 col-form-label">&nbsp;</label>
         <div class="input-group col-md-8">
-            <button type="submit" class="btn btn-outline-primary">
-        Guardar
-      </button>
+            <button [disabled]="!forma.valid" type="submit" class="btn btn-outline-primary">Guardar</button>
         </div>
     </div>
 
