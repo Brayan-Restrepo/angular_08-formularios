@@ -43,9 +43,31 @@ export class DataComponent implements OnInit {
           Validators.minLength(3)
         ]
       )
-      ])
+      ]),
+      'password1': new FormControl('', Validators.required),
+      'password2': new FormControl()
     });
-    //this.forma.setValue(this.usuario);
+
+    // Error con this.noIgual por que no sabe cual es el this.forma
+    // this.forma.controls['password2'].setValidators([Validators.required, this.noIgual]);
+    this.forma.controls['password2'].setValidators([Validators.required, this.noIgual.bind(this.forma)]);
+    // this.forma.setValue(this.usuario);
+  }
+
+  noIgual(nombre: FormControl): {[s: string]: boolean} {
+    // error por que no sabe cual es el this.forma
+    /*
+    if ( nombre.value !== this.forma.controls['password1'].value) {
+      return {noigual: true};
+    }
+    */
+
+    // ya se le envia el this.forma como this
+    const forma: any = this;
+    if ( nombre.value !== forma.controls['password1'].value) {
+      return {noigual: true};
+    }
+    return null;
   }
 
   agregarPasatiempo() {
