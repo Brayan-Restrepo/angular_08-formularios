@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import { Observable } from '../../../../node_modules/rxjs';
+import { resolve } from 'url';
 
 @Component({
   selector: 'app-data',
@@ -44,6 +46,8 @@ export class DataComponent implements OnInit {
         ]
       )
       ]),
+      // Validacion asincrona
+      'username': new FormControl('', Validators.required, this.existeUsuario),
       'password1': new FormControl('', Validators.required),
       'password2': new FormControl()
     });
@@ -86,5 +90,23 @@ export class DataComponent implements OnInit {
   guargarCambio() {
     console.log( this.forma);
     this.forma.reset();
+  }
+
+  /**
+   * Validacion asincrona
+   */
+  existeUsuario(control: FormControl): Promise<any> | Observable<any> {
+    const promise = new Promise(
+      (resolve, reject) => {
+        setTimeout ( () => {
+          if (control.value === 'Brayan') {
+            resolve( {existe: true} );
+          } else {
+            resolve( null );
+          }
+        }, 3000);
+      }
+    );
+    return promise;
   }
 }
